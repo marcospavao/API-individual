@@ -53,12 +53,12 @@ public class AlunoController {
 	public ResponseEntity<Aluno> atualizar(@RequestBody Aluno aluno) {
 		return new
 				ResponseEntity<> (alunoService.atualizarAluno(aluno), 
-						HttpStatus.CREATED);
+						HttpStatus.OK);
 	}
 	
 	
 	@DeleteMapping
-	public ResponseEntity <String> deletarAluno(Aluno aluno) {
+	public ResponseEntity <String> deletarAluno(@RequestBody Aluno aluno) {
 		alunoService.deletarAluno(aluno);
 		return new 
 				ResponseEntity<> ("Deletado com sucesso",

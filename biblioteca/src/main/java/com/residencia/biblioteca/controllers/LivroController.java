@@ -52,7 +52,7 @@ public class LivroController {
 	
 	
 	@DeleteMapping
-	public ResponseEntity <String> deletarLivro(Livro lIvro) {
+	public ResponseEntity <String> deletarLivro(@RequestBody Livro lIvro) {
 		lIvroService.deletarLivro(lIvro);
 		return new 
 				ResponseEntity<> ("Deletado com sucesso",

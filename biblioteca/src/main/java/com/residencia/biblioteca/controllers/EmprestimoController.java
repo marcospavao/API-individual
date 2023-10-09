@@ -52,7 +52,7 @@ public class EmprestimoController {
 	
 	
 	@DeleteMapping
-	public ResponseEntity <String> deletarEmprestimo(Emprestimo emprestimo) {
+	public ResponseEntity <String> deletarEmprestimo(@RequestBody Emprestimo emprestimo) {
 		emprestimoService.deletarEmprestimo(emprestimo);
 		return new 
 				ResponseEntity<> ("Deletado com sucesso",
