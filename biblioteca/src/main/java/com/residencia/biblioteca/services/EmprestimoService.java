@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.residencia.biblioteca.entities.Emprestimo;
+
 import com.residencia.biblioteca.repositories.EmprestimoRepository;
 
 @Service
@@ -20,7 +21,7 @@ public class EmprestimoService {
 		}
 	
 	public Emprestimo buscarEmprestimoPorId(Integer id) {
-		return emprestimoRepo.findById(id).get();
+		return emprestimoRepo.findById(id).orElse(null);
 		
 	}
 	
@@ -33,9 +34,23 @@ public class EmprestimoService {
 		return emprestimoRepo.save(emprestimo);
 	}
 	
-	public void deletarEmprestimo(Emprestimo emprestimo) {
-	emprestimoRepo.delete(emprestimo);
+	public Boolean deletarEmprestimo(Emprestimo emprestimo) {
+		if (emprestimo == null)
+			return false;
+
+		Emprestimo emprestimoExistente = buscarEmprestimoPorId(emprestimo.getCodigoEmprestimo());
+		if (emprestimoExistente == null)
+			return false;
+
+		emprestimoRepo.delete(emprestimo);
+
+		Emprestimo emprestimoContinuaExistindo = buscarEmprestimoPorId(emprestimo.getCodigoEmprestimo());
+		if (emprestimoContinuaExistindo == null)
+			return true;
+
+		return false;
 		
 	}
+	
 }
 

@@ -32,11 +32,15 @@ public class AlunoController {
 		
 	}
 	@GetMapping ("/{id}")
-	public ResponseEntity<Aluno> buscarPorId(@PathVariable Integer id){
-		return new 
-				ResponseEntity<> (alunoService.buscarAlunoPorId(id), 
-						HttpStatus.OK);
-	}
+	public ResponseEntity<Aluno> buscarPorId(@PathVariable Integer id) {
+	Aluno aluno = alunoService.buscarAlunoPorId(id);
+		if (aluno == null)
+			return new 
+				ResponseEntity<> (aluno,
+						HttpStatus.NOT_FOUND);
+		else 
+			return new 
+					ResponseEntity<>(aluno, HttpStatus.OK);}
 	
 	@GetMapping("/porid")
 	public ResponseEntity<Aluno> buscarAlunoPorId(@RequestParam Integer id) {
@@ -59,12 +63,29 @@ public class AlunoController {
 	
 	@DeleteMapping
 	public ResponseEntity <String> deletarAluno(@RequestBody Aluno aluno) {
-		alunoService.deletarAluno(aluno);
-		return new 
+		if(alunoService.deletarAluno(aluno))
+			return new 
 				ResponseEntity<> ("Deletado com sucesso",
 						HttpStatus.OK);
+		else 
+			return new 
+					ResponseEntity<>("não foi possivel deletar",
+							HttpStatus.BAD_REQUEST);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

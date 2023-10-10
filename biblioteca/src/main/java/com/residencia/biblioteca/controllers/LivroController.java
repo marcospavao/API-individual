@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.residencia.biblioteca.entities.Livro;
 import com.residencia.biblioteca.services.LivroService;
 
@@ -22,41 +23,48 @@ import com.residencia.biblioteca.services.LivroService;
 public class LivroController {
 
 	@Autowired
-	LivroService lIvroService;
+	LivroService livroService;
 	
 	@GetMapping
 	public ResponseEntity<List<Livro>> listarLivros(){
 		return new 
-				ResponseEntity<> (lIvroService.listarLivros(), HttpStatus.OK);
+				ResponseEntity<> (livroService.listarLivros(), HttpStatus.OK);
 		
 	}
 	@GetMapping ("{id}")
 	public ResponseEntity<Livro> buscarPorId(@PathVariable Integer id){
-		return new 
-				ResponseEntity<> (lIvroService.buscarLivroPorId(id), 
-						HttpStatus.OK);
-	}
+		Livro livro = livroService.buscarLivroPorId(id);
+		if (livro == null)
+			return new 
+				ResponseEntity<> (livro,
+						HttpStatus.NOT_FOUND);
+		else 
+			return new 
+					ResponseEntity<>(livro, HttpStatus.OK);}
+	
 	
 	@PostMapping
 	public ResponseEntity<Livro> salvar (@RequestBody Livro lIvro) {
 		return new 
-				ResponseEntity<> (lIvroService.salvarLivro(lIvro), 
+				ResponseEntity<> (livroService.salvarLivro(lIvro), 
 						HttpStatus.CREATED);
 	}
 	@PutMapping
 	public ResponseEntity<Livro> atualizar(@RequestBody Livro lIvro) {
 		return new
-				ResponseEntity<> (lIvroService.atualizarLivro(lIvro), 
+				ResponseEntity<> (livroService.atualizarLivro(lIvro), 
 						HttpStatus.CREATED);
 	}
 	
 	
+	
+	
 	@DeleteMapping
-	public ResponseEntity <String> deletarLivro(@RequestBody Livro lIvro) {
-		lIvroService.deletarLivro(lIvro);
-		return new 
-				ResponseEntity<> ("Deletado com sucesso",
-						HttpStatus.OK);
+	public ResponseEntity<String> deletarLivro(@RequestBody Livro livro) {
+		if (livroService.deletarLivro(livro))
+			return new ResponseEntity<>("{\"msg\":\"Deletado com Sucesso\"}", HttpStatus.OK);
+		else
+			return new ResponseEntity<>("{\"msg\":\"Não foi possível deletar\"}", HttpStatus.BAD_REQUEST);		
 	}
 }	
 	

@@ -23,7 +23,7 @@ public class EditoraService {
 		}
 	
 	public Editora buscarEditoraPorId(Integer id) {
-		return editoraRepo.findById(id).get();
+		return editoraRepo.findById(id).orElse(null);
 		
 	}
 	
@@ -36,9 +36,20 @@ public class EditoraService {
 		return editoraRepo.save(editora);
 	}
 	
-	public void deletarEditora(Editora editora) {
-	editoraRepo.delete(editora);
-		
-	}
-}
+	public Boolean deletarEditora(Editora editora) {
+		if (editora == null)
+			return false;
 
+		Editora editoraExistente = buscarEditoraPorId(editora.getCodigoEditora());
+		if (editoraExistente == null)
+			return false;
+
+		editoraRepo.delete(editora);
+
+		Editora editoraContinuaExistindo = buscarEditoraPorId(editora.getCodigoEditora());
+		if (editoraContinuaExistindo == null)
+			return true;
+
+		return false;
+}
+}

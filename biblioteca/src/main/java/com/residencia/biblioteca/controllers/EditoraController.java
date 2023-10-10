@@ -17,48 +17,45 @@ import org.springframework.web.bind.annotation.RestController;
 import com.residencia.biblioteca.entities.Editora;
 import com.residencia.biblioteca.services.EditoraService;
 
-
 @RestController
 @RequestMapping("/editora")
 public class EditoraController {
 
-	
 	@Autowired
 	EditoraService editoraService;
-	
+
 	@GetMapping
-	public ResponseEntity<List<Editora>> listarEditoras(){
-		return new 
-				ResponseEntity<> (editoraService.listarEditoras(), HttpStatus.OK);
-		
+	public ResponseEntity<List<Editora>> listarEditoras() {
+		return new ResponseEntity<>(editoraService.listarEditoras(), HttpStatus.OK);
+
 	}
-	@GetMapping ("{id}")
-	public ResponseEntity<Editora> buscarPorId(@PathVariable Integer id){
-		return new 
-				ResponseEntity<> (editoraService.buscarEditoraPorId(id), 
-						HttpStatus.OK);
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Editora> buscarPorId(@PathVariable Integer id) {
+		Editora editora = editoraService.buscarEditoraPorId(id);
+		if (editora == null)
+			return new ResponseEntity<>(editora, HttpStatus.NOT_FOUND);
+		else
+			return new ResponseEntity<>(editora, HttpStatus.OK);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Editora> salvar (@RequestBody Editora editora) {
-		return new 
-				ResponseEntity<> (editoraService.salvarEditora(editora), 
-						HttpStatus.CREATED);
+	public ResponseEntity<Editora> salvar(@RequestBody Editora editora) {
+		return new ResponseEntity<>(editoraService.salvarEditora(editora), HttpStatus.CREATED);
 	}
+
 	@PutMapping
 	public ResponseEntity<Editora> atualizar(@RequestBody Editora editora) {
-		return new
-				ResponseEntity<> (editoraService.atualizarEditora(editora), 
-						HttpStatus.CREATED);
+		return new ResponseEntity<>(editoraService.atualizarEditora(editora), HttpStatus.CREATED);
 	}
-	
-	
+
 	@DeleteMapping
-	public ResponseEntity <String> deletarEditora(@RequestBody Editora editora) {
-		editoraService.deletarEditora(editora);
-		return new 
-				ResponseEntity<> ("Deletado com sucesso",
-						HttpStatus.OK);
+	public ResponseEntity<String> deletarEditora(@RequestBody Editora editora) {
+
+		if (editoraService.deletarEditora(editora))
+			return new ResponseEntity<>("Deletado com sucesso", HttpStatus.OK);
+		else
+			return new ResponseEntity<>("não foi possivel deletar", HttpStatus.BAD_REQUEST);
+
 	}
 }
-
